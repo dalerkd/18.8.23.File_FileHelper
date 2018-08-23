@@ -25,7 +25,33 @@ public class File {
             e.printStackTrace();
         }
         return new String(fileContent);
+    }
 
+    /*
+     * 不依赖系统File版
+     * */
+    static final int BUFFER_SIZE = 4 * 1024;
+
+    public String readToStringMySelf() {
+        String result = "";
+        try {
+            FileInputStream is = new FileInputStream(m_dir);
+            //InputStreamReader sr = new InputStreamReader(is,"utf-8");
+            int len = 0;
+            byte[] buf = new byte[BUFFER_SIZE];
+            while ((len = is.read(buf)) != -1) {
+                result += new String(buf, 0, len);
+            }
+            is.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     //写入一个String2file.
@@ -35,6 +61,21 @@ public class File {
         try {
             out = new FileOutputStream(file);
             out.write(content.getBytes());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void writeStringMySelf(String content) {
+
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(m_dir, false);
+            out.write(content.getBytes());
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
